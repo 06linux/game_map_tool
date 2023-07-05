@@ -185,9 +185,6 @@ export class BaseSav {
                 const data = list[index];
                 if (this.matchID(data, id)) {
                     list[index] = newData;
-
-                    log('BaseSav.set', newData, list);
-
                     isSet = true;
                     break;
                 }
@@ -197,8 +194,6 @@ export class BaseSav {
                 list.push(newData);
             }
 
-
-            log('BaseSav.set 222', newData, list);
             this.m_map.set(key, list);
         }
         else {

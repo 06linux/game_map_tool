@@ -1,5 +1,5 @@
 import { Component, Event, log, Node, size, v2, _decorator } from 'cc';
-import { BaseButton, BaseColor, BaseConfig, BaseEvent, BaseFontSize, BaseLayout, BaseLoading, BaseMenu, BaseSav, BaseSocket, BaseSpace, BaseText, BaseUtil, SMsg, STag } from '../base';
+import { BaseButton, BaseColor, BaseConfig, BaseEvent, BaseFile, BaseFontSize, BaseLayout, BaseLoading, BaseMenu, BaseSav, BaseSocket, BaseSpace, BaseStr, BaseText, BaseTime, BaseUtil, SMsg, STag } from '../base';
 import { ME_EditMenu } from '../resources/menu/ME_EditMenu';
 import { SMap } from '../src/s_map';
 const { ccclass, property } = _decorator;
@@ -91,6 +91,18 @@ export class ME_MapList extends Component {
         }
 
         {
+            const btnN = BaseButton.load({ text: '导入', fontSize: BaseFontSize.NOR, colorbg: BaseColor.value('BG_NOR') });
+            this.m_menuBar.addChild(btnN);
+            btnN.getComponent(BaseButton).setClick(this.node, 'ME_MapList', 'onMenuClick', '导入');
+        }
+
+        {
+            const btnN = BaseButton.load({ text: '导出', fontSize: BaseFontSize.NOR, colorbg: BaseColor.value('BG_NOR') });
+            this.m_menuBar.addChild(btnN);
+            btnN.getComponent(BaseButton).setClick(this.node, 'ME_MapList', 'onMenuClick', '导出');
+        }
+
+        {
             const btnN = BaseButton.load({ text: '退出', fontSize: BaseFontSize.NOR, colorbg: BaseColor.value('RED') });
             this.m_menuBar.addChild(btnN);
             btnN.getComponent(BaseButton).setClick(this.node, 'ME_MapList', 'onMenuClick', '退出');
@@ -115,6 +127,16 @@ export class ME_MapList extends Component {
             case '刷新':
                 {
                     this.refresh();
+                }
+                break;
+            case '导出':
+                {
+                    this.exportJson();
+                }
+                break;
+            case '导入':
+                {
+                    this.importJson();
                 }
                 break;
             case '搜索':
@@ -348,6 +370,49 @@ export class ME_MapList extends Component {
         this.refresh();
         BaseSav.save(this.m_savKey);
         BaseMenu.showSuccess('删除成功');
+    }
+
+    exportJson() {
+        const list = BaseSav.getAll(this.m_savKey);
+        if (list && list.length > 0) {
+            const str = JSON.stringify(list);
+            BaseFile.save(str, `地图列表_${BaseTime.dateStr()}_${BaseStr.uidInvite8()}.json`);
+        }
+    }
+
+    async importJson() {
+
+        const res = await BaseFile.open('.json');
+        if (BaseUtil.isNull(res)) {
+            return;
+        }
+
+        const obj = JSON.parse(res);
+        if (Array.isArray(obj)) {
+            const list = obj as any[];
+            for (let index = 0; index < list.length; index++) {
+                const data = list[index];
+                if (data['id']) {
+                    BaseSav.set(this.m_savKey, data['id'], data);
+                }
+                else if (data['_id']) {
+                    BaseSav.set(this.m_savKey, data['_id'], data);
+                }
+            }
+        }
+        else {
+            const data = obj
+            if (data['id']) {
+                BaseSav.set(this.m_savKey, data['id'], data);
+            }
+            else if (data['_id']) {
+                BaseSav.set(this.m_savKey, data['_id'], data);
+            }
+        }
+
+        BaseSav.save(this.m_savKey);
+
+        this.refreshHome();
     }
 }
 

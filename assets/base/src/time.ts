@@ -29,7 +29,7 @@ export class BaseTime {
         const min = date.getMinutes();
         const second = date.getSeconds();
 
-        return `${year}-${month}-${day} ${hour}:${min}:${second}`;
+        return `${year}-${month}-${day}${hour}:${min}:${second}`;
     }
 
     public static dateStr(time?: number) {
@@ -37,7 +37,7 @@ export class BaseTime {
         const year = date.getFullYear();
         const month = date.getMonth() + 1;
         const day = date.getDate();
-        
+
         return `${year}-${month}-${day}`;
     }
 

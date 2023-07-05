@@ -115,12 +115,7 @@ export class ME_MapEdit extends Component {
     // 导出 json 配置
     exportJson() {
         const str = JSON.stringify(this.m_map);
-        BaseFile.save(str, `${this.m_map.name}_${this.m_map._id}.json`);
-    }
-
-    // 导入 json 配置 （会覆盖当前配置，慎重！）
-    async importJson() {
-        // 保留
+        BaseFile.save(str, `${this.m_map.zone}_${this.m_map.name}.json`);
     }
 
     // 退出界面
@@ -163,19 +158,6 @@ export class ME_MapEdit extends Component {
             btnN.getComponent(BaseButton).setClick(this.node, 'ME_MapEdit', 'onMenuClick', '重置');
         }
 
-        if (sys.isBrowser) {
-            {
-                const btnN = BaseButton.load({ text: '导出', fontSize: BaseFontSize.NOR, colorbg: BaseColor.value('BG_NOR') });
-                this.m_menuBar.addChild(btnN);
-                btnN.getComponent(BaseButton).setClick(this.node, 'ME_MapEdit', 'onMenuClick', '导出');
-            }
-
-            // {
-            //     const btnN = BaseButton.load({ text: '导入', fontSize: BaseFontSize.NOR, colorbg: BaseColor.value('BG_NOR') });
-            //     this.m_menuBar.addChild(btnN);
-            //     btnN.getComponent(BaseButton).setClick(this.node, 'ME_MapEdit', 'onMenuClick', '导入');
-            // }
-        }
 
         {
             const btnN = BaseButton.load({ text: '帮助', fontSize: BaseFontSize.NOR, colorbg: BaseColor.value('BG_NOR') });
@@ -193,6 +175,12 @@ export class ME_MapEdit extends Component {
             const btnN = BaseButton.load({ text: '保存', fontSize: BaseFontSize.NOR, colorbg: BaseColor.value('BG_NOR') });
             this.m_menuBar.addChild(btnN);
             btnN.getComponent(BaseButton).setClick(this.node, 'ME_MapEdit', 'onMenuClick', '保存');
+        }
+
+        {
+            const btnN = BaseButton.load({ text: '导出', fontSize: BaseFontSize.NOR, colorbg: BaseColor.value('BG_NOR') });
+            this.m_menuBar.addChild(btnN);
+            btnN.getComponent(BaseButton).setClick(this.node, 'ME_MapEdit', 'onMenuClick', '导出');
         }
 
         {
@@ -238,11 +226,6 @@ export class ME_MapEdit extends Component {
             case '导出':
                 {
                     this.exportJson();
-                }
-                break;
-            case '导入':
-                {
-                    BaseMenu.showMsg('暂不开放导入功能');
                 }
                 break;
             case '帮助':
