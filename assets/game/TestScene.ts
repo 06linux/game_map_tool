@@ -30,8 +30,8 @@ export class TestScene extends Component {
 
     initMusic() {
         MusicTool.freeAll();
-        MusicTool.load('sound_touch');
-        MusicTool.loadPlay('music_1');
+        // MusicTool.load('sound_touch');
+        // MusicTool.loadPlay('music_1');
     }
 
 

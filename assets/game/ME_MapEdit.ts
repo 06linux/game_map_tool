@@ -1,7 +1,5 @@
-import { Component, Event, EventKeyboard, EventMouse, Input, KeyCode, Node, Prefab, Vec3, _decorator, input, instantiate, log, sys, v2, v3 } from 'cc';
-import { BCC, BaseButton, BaseColor, BaseEvent, BaseFile, BaseFontSize, BaseMenu, BaseSav, BaseSocket, BaseStr, BaseText, BaseUtil, SMsg, STag } from '../base';
-import { ME_ConnMenu } from '../resources/menu/ME_ConnMenu';
-import { ME_PlaceMenu } from '../resources/menu/ME_PlaceMenu';
+import { Component, Event, EventKeyboard, EventMouse, Input, KeyCode, Node, Prefab, Vec3, _decorator, input, instantiate, log, v2, v3 } from 'cc';
+import { BCC, BaseButton, BaseColor, BaseEvent, BaseFile, BaseFontSize, BaseMenu, BaseSav, BaseStr, BaseText } from '../base';
 import { SMap, SMapDir, SMapPlace, SMapPos, SMapUtil } from '../src/s_map';
 import { ME_Line } from './ME_Line';
 import { ME_Place } from './ME_Place';
@@ -519,11 +517,9 @@ export class ME_MapEdit extends Component {
                     if (BaseMenu.getMenu('ME_PlaceMenu')) {
                         return;
                     }
-
                     const placeN = this.placeFocusGetOne();
                     if (placeN) {
-                        const menuN = await BaseMenu.loadPrefab('ME_PlaceMenu', { name: 'ME_PlaceMenu' });
-                        menuN.getComponent(ME_PlaceMenu).init(placeN);
+                        BaseMenu.loadPrefab('ME_PlaceMenu', { name: 'ME_PlaceMenu', initArg: placeN });
                     }
                 }
                 break;
@@ -654,8 +650,7 @@ export class ME_MapEdit extends Component {
 
             const placeSrc = this.placeFocusGetOne();
             if (placeSrc && placeDist && placeSrc.uuid != placeDist.uuid) {
-                const menuN = await BaseMenu.loadPrefab('ME_ConnMenu', { name: 'ME_ConnMenu' });
-                menuN.getComponent(ME_ConnMenu).init(placeSrc, placeDist);
+                const menuN = await BaseMenu.loadPrefab('ME_ConnMenu', { name: 'ME_ConnMenu', initArg: [placeSrc, placeDist] });
                 this.placeFocusClear();
             }
 
